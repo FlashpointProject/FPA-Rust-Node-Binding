@@ -1,3 +1,3 @@
-# `test-linux-x64-gnu`
+# `@fparchive/flashpoint-archive-linux-x64-gnu`
 
-This is the **x86_64-unknown-linux-gnu** binary for `test`
+This is the **x86_64-unknown-linux-gnu** binary for `@fparchive/flashpoint-archive`

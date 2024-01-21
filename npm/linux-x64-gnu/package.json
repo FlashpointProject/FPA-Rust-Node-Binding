@@ -1,6 +1,6 @@
 {
-  "name": "flashpoint-archive-linux-x64-gnu",
-  "version": "0.0.0",
+  "name": "@fparchive/flashpoint-archive-linux-x64-gnu",
+  "version": "0.2.0",
   "os": [
     "linux"
   ],

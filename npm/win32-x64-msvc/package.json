@@ -1,15 +1,15 @@
 {
-  "name": "test-win32-x64-msvc",
-  "version": "0.0.0",
+  "name": "@fparchive/flashpoint-archive-win32-x64-msvc",
+  "version": "0.2.0",
   "os": [
     "win32"
   ],
   "cpu": [
     "x64"
   ],
-  "main": "test.win32-x64-msvc.node",
+  "main": "flashpoint-archive.win32-x64-msvc.node",
   "files": [
-    "test.win32-x64-msvc.node"
+    "flashpoint-archive.win32-x64-msvc.node"
   ],
   "license": "MIT",
   "engines": {

@@ -1,13 +1,13 @@
 {
   "name": "@fparchive/flashpoint-archive-darwin-arm64",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "os": [
     "darwin"
   ],
   "cpu": [
     "arm64"
   ],
-  "main": "@fparchive/flashpoint-archive.darwin-arm64.node",
+  "main": "flashpoint-archive.darwin-arm64.node",
   "files": [
     "flashpoint-archive.darwin-arm64.node"
   ],
