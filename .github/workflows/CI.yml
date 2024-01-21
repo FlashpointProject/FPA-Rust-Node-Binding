@@ -1,7 +1,7 @@
 name: CI
 env:
   DEBUG: napi:*
-  APP_NAME: @fparchive/flashpoint-archive
+  APP_NAME: "@fparchive/flashpoint-archive"
   MACOSX_DEPLOYMENT_TARGET: '10.13'
 permissions:
   contents: write
