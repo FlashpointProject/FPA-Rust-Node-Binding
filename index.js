@@ -295,7 +295,9 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { FlashpointArchive, parseUserSearchInput } = nativeBinding
+const { GameSearchSortable, GameSearchDirection, FlashpointArchive, parseUserSearchInput } = nativeBinding
 
+module.exports.GameSearchSortable = GameSearchSortable
+module.exports.GameSearchDirection = GameSearchDirection
 module.exports.FlashpointArchive = FlashpointArchive
 module.exports.parseUserSearchInput = parseUserSearchInput
