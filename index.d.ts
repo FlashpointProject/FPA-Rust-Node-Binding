@@ -44,6 +44,7 @@ export interface GameFilter {
   matchAny: boolean
 }
 export interface FieldFilter {
+  id?: Array<string>
   generic?: Array<string>
   library?: Array<string>
   title?: Array<string>
@@ -52,6 +53,12 @@ export interface FieldFilter {
   series?: Array<string>
   tags?: Array<string>
   platforms?: Array<string>
+  playMode?: Array<string>
+  status?: Array<string>
+  notes?: Array<string>
+  source?: Array<string>
+  originalDescription?: Array<string>
+  language?: Array<string>
 }
 export interface PageTuple {
   id: string
@@ -77,8 +84,8 @@ export interface Game {
   publisher: string
   primaryPlatform: string
   platforms: TagVec
-  dateAdded: Date
-  dateModified: Date
+  dateAdded: string
+  dateModified: string
   detailedPlatforms?: Array<Tag>
   legacyBroken: boolean
   legacyExtreme: boolean
@@ -96,7 +103,7 @@ export interface Game {
   language: string
   activeDataId?: number
   activeDataOnDisk: boolean
-  lastPlayed?: Date
+  lastPlayed?: string
   playtime: number
   playCounter: number
   activeGameConfigId?: number
@@ -115,8 +122,8 @@ export interface PartialGame {
   publisher?: string
   primaryPlatform?: string
   platforms?: TagVec
-  dateAdded?: Date
-  dateModified?: Date
+  dateAdded?: string
+  dateModified?: string
   legacyBroken?: boolean
   legacyExtreme?: boolean
   playMode?: string
@@ -132,7 +139,7 @@ export interface PartialGame {
   language?: string
   activeDataId?: number
   activeDataOnDisk?: boolean
-  lastPlayed?: Date
+  lastPlayed?: string
   playtime?: number
   activeGameConfigId?: number
   activeGameConfigOwner?: string
@@ -143,7 +150,7 @@ export interface GameData {
   id: number
   gameId: string
   title: string
-  dateAdded: Date
+  dateAdded: string
   sha256: string
   crc32: number
   presentOnDisk: boolean
@@ -157,7 +164,7 @@ export interface PartialGameData {
   id?: number
   gameId: string
   title?: string
-  dateAdded?: Date
+  dateAdded?: string
   sha256?: string
   crc32?: number
   presentOnDisk?: boolean
@@ -167,11 +174,15 @@ export interface PartialGameData {
   applicationPath?: string
   launchCommand?: string
 }
+export interface PlatformAppPath {
+  appPath: string
+  count: number
+}
 export interface Tag {
   id: number
   name: string
   description: string
-  dateModified: Date
+  dateModified: string
   aliases: Array<string>
   category?: string
 }
@@ -179,9 +190,20 @@ export interface PartialTag {
   id: number
   name: string
   description?: string
-  dateModified?: Date
+  dateModified?: string
   aliases?: Array<string>
   category?: string
+}
+export interface TagSuggestion {
+  id: number
+  name: string
+  matchedFrom: string
+  gamesCount: number
+  category?: string
+}
+export interface LooseTagAlias {
+  id: number
+  value: string
 }
 export interface TagCategory {
   id: number
@@ -195,7 +217,88 @@ export interface PartialTagCategory {
   color: string
   description?: string
 }
+export interface RemoteDeletedGamesRes {
+  games: Array<RemoteDeletedGame>
+}
+export interface RemoteDeletedGame {
+  id: string
+  dateModified: string
+  reason: string
+}
+export interface RemoteGamesRes {
+  games: Array<RemoteGame>
+  addApps: Array<RemoteAddApp>
+  gameData: Array<RemoteGameData>
+  tagRelations: Array<Array<string>>
+  platformRelations: Array<Array<string>>
+}
+export interface RemoteGameData {
+  gameId: string
+  title: string
+  dateAdded: string
+  sha256: string
+  crc32: number
+  size: number
+  parameters?: string
+  applicationPath: string
+  launchCommand: string
+}
+export interface RemoteAddApp {
+  name: string
+  applicationPath: string
+  launchCommand: string
+  waitForExit: boolean
+  autoRunBefore: boolean
+  parentGameId: string
+}
+export interface RemoteGame {
+  id: string
+  title: string
+  alternateTitles: string
+  series: string
+  developer: string
+  publisher: string
+  dateAdded: string
+  dateModified: string
+  playMode: string
+  status: string
+  notes: string
+  source: string
+  applicationPath: string
+  launchCommand: string
+  releaseDate: string
+  version: string
+  originalDescription: string
+  language: string
+  library: string
+  platformName: string
+  archiveState: number
+}
+export interface RemoteCategory {
+  id: number
+  name: string
+  color: string
+  description: string
+}
+export interface RemoteTag {
+  id: number
+  name: string
+  description: string
+  category: string
+  dateModified: string
+  aliases: Array<string>
+  deleted: boolean
+}
+export interface RemotePlatform {
+  id: number
+  name: string
+  description: string
+  dateModified: string
+  aliases: Array<string>
+  deleted: boolean
+}
 export function parseUserSearchInput(input: string): GameSearch
+export function newSubfilter(): GameFilter
 export type FlashpointNode = FlashpointArchive
 export class FlashpointArchive {
   constructor()
@@ -205,6 +308,9 @@ export class FlashpointArchive {
   searchGamesTotal(search: GameSearch): Promise<number>
   searchGamesWithTag(tag: string): Promise<Array<Game>>
   searchGamesRandom(search: GameSearch, count: number): Promise<Array<Game>>
+  searchTagSuggestions(partial: string, blacklist: Array<string>): Promise<Array<TagSuggestion>>
+  searchPlatformSuggestions(partial: string): Promise<Array<TagSuggestion>>
+  findAllGameIds(): Promise<Array<string>>
   findGame(id: string): Promise<Game | null>
   createGame(partialGame: PartialGame): Promise<Game>
   saveGame(partialGame: PartialGame): Promise<Game>
@@ -212,18 +318,21 @@ export class FlashpointArchive {
   deleteGame(id: string): Promise<void>
   countGames(): Promise<number>
   findAddAppById(id: string): Promise<AdditionalApp | null>
+  createAddApp(addApp: AdditionalApp): Promise<AdditionalApp>
   findAllTags(): Promise<Array<Tag>>
   findTag(name: string): Promise<Tag | null>
   findTagById(id: number): Promise<Tag | null>
-  createTag(name: string, category?: string | undefined | null): Promise<Tag>
+  createTag(name: string, category?: string | undefined | null, id?: number | undefined | null): Promise<Tag>
   saveTag(partial: PartialTag): Promise<Tag>
   deleteTag(name: string): Promise<void>
+  deleteTagById(id: number): Promise<void>
   countTags(): Promise<number>
   mergeTags(name: string, mergedInto: string): Promise<Tag>
   findAllPlatforms(): Promise<Array<Tag>>
   findPlatform(name: string): Promise<Tag | null>
   findPlatformById(id: number): Promise<Tag | null>
-  createPlatform(name: string): Promise<Tag>
+  createPlatform(name: string, id?: number | undefined | null): Promise<Tag>
+  savePlatform(partial: PartialTag): Promise<Tag>
   deletePlatform(name: string): Promise<void>
   countPlatforms(): Promise<number>
   findAllTagCategories(): Promise<Array<TagCategory>>
@@ -240,6 +349,16 @@ export class FlashpointArchive {
   findAllGameLibraries(): Promise<Array<string>>
   addGamePlaytime(id: string, seconds: number): Promise<void>
   clearPlaytimeTracking(): Promise<void>
+  findAllGameStatuses(): Promise<Array<string>>
+  findAllGamePlayModes(): Promise<Array<string>>
+  findAllGameApplicationPaths(): Promise<Array<string>>
+  findPlatformAppPaths(): Promise<Record<string, Array<PlatformAppPath>>>
+  forceGamesActiveDataMostRecent(): Promise<void>
+  updateApplyCategories(cats: Array<RemoteCategory>): Promise<void>
+  updateApplyPlatforms(plats: Array<RemotePlatform>): Promise<void>
+  updateApplyTags(tags: Array<RemoteTag>): Promise<void>
+  updateApplyGames(games: RemoteGamesRes): Promise<void>
+  updateDeleteGames(games: RemoteDeletedGamesRes): Promise<void>
   optimizeDatabase(): Promise<void>
 }
 

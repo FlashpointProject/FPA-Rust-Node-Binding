@@ -1,6 +1,8 @@
+use std::collections::HashMap;
+
 use napi::{Result, Error, Status};
 use napi_derive::napi;
-use flashpoint_archive::{FlashpointArchive, game::{search::{GameSearch, PageTuple}, Game, PartialGame, AdditionalApp}, tag::{Tag, PartialTag}, tag_category::{TagCategory, PartialTagCategory}, game_data::{GameData, PartialGameData}};
+use flashpoint_archive::{game::{search::{GameFilter, GameSearch, PageTuple}, AdditionalApp, Game, PartialGame}, game_data::{GameData, PartialGameData}, platform::PlatformAppPath, tag::{PartialTag, Tag, TagSuggestion}, tag_category::{PartialTagCategory, TagCategory}, update::{RemoteCategory, RemoteDeletedGamesRes, RemoteGamesRes, RemotePlatform, RemoteTag}, FlashpointArchive};
 
 #[napi(js_name = "FlashpointArchive")]
 pub struct FlashpointNode {
@@ -59,6 +61,27 @@ impl FlashpointNode {
     }
 
     #[napi]
+    pub async fn search_tag_suggestions(&self, partial: String, blacklist: Vec<String>) -> Result<Vec<TagSuggestion>> {
+        self.flashpoint.search_tag_suggestions(&partial, blacklist).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn search_platform_suggestions(&self, partial: String) -> Result<Vec<TagSuggestion>> {
+        self.flashpoint.search_platform_suggestions(&partial).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn find_all_game_ids(&self) -> Result<Vec<String>> {
+        self.flashpoint.find_all_game_ids().await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
     pub async fn find_game(&self, id: String) -> Result<Option<Game>> {
         self.flashpoint.find_game(&id).await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
@@ -112,6 +135,14 @@ impl FlashpointNode {
     }
 
     #[napi]
+    pub async fn create_add_app(&self, mut add_app: AdditionalApp) -> Result<AdditionalApp> {
+        self.flashpoint.create_add_app(&mut add_app).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })?;
+        Ok(add_app)
+    }
+
+    #[napi]
     pub async fn find_all_tags(&self) -> Result<Vec<Tag>> {
         self.flashpoint.find_all_tags().await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
@@ -133,15 +164,15 @@ impl FlashpointNode {
     }
 
     #[napi]
-    pub async fn create_tag(&self, name: String, category: Option<String>) -> Result<Tag> {
-        self.flashpoint.create_tag(&name, category).await.map_err(|e| {
+    pub async fn create_tag(&self, name: String, category: Option<String>, id: Option<i64>) -> Result<Tag> {
+        self.flashpoint.create_tag(&name, category, id).await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
         })
     }
 
     #[napi]
-    pub async fn save_tag(&self, partial: PartialTag) -> Result<Tag> {
-        self.flashpoint.save_tag(&partial).await.map_err(|e| {
+    pub async fn save_tag(&self, mut partial: PartialTag) -> Result<Tag> {
+        self.flashpoint.save_tag(&mut partial).await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
         })
     }
@@ -149,6 +180,13 @@ impl FlashpointNode {
     #[napi]
     pub async fn delete_tag(&self, name: String) -> Result<()> {
         self.flashpoint.delete_tag(&name).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn delete_tag_by_id(&self, id: i64) -> Result<()> {
+        self.flashpoint.delete_tag_by_id(id).await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
         })
     }
@@ -189,8 +227,15 @@ impl FlashpointNode {
     }
 
     #[napi]
-    pub async fn create_platform(&self, name: String) -> Result<Tag> {
-        self.flashpoint.create_platform(&name).await.map_err(|e| {
+    pub async fn create_platform(&self, name: String, id: Option<i64>) -> Result<Tag> {
+        self.flashpoint.create_platform(&name, id).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn save_platform(&self, mut partial: PartialTag) -> Result<Tag> {
+        self.flashpoint.save_platform(&mut partial).await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
         })
     }
@@ -308,6 +353,76 @@ impl FlashpointNode {
     }
 
     #[napi]
+    pub async fn find_all_game_statuses(&self) -> Result<Vec<String>> {
+        self.flashpoint.find_all_game_statuses().await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn find_all_game_play_modes(&self) -> Result<Vec<String>> {
+        self.flashpoint.find_all_game_play_modes().await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn find_all_game_application_paths(&self) -> Result<Vec<String>> {
+        self.flashpoint.find_all_game_application_paths().await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+    
+    #[napi]
+    pub async fn find_platform_app_paths(&self) -> Result<HashMap<String, Vec<PlatformAppPath>>> {
+        self.flashpoint.find_platform_app_paths().await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn force_games_active_data_most_recent(&self) -> Result<()> {
+        self.flashpoint.force_games_active_data_most_recent().await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn update_apply_categories(&self, cats: Vec<RemoteCategory>) -> Result<()> {
+        self.flashpoint.update_apply_categories(cats).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn update_apply_platforms(&self, plats: Vec<RemotePlatform>) -> Result<()> {
+        self.flashpoint.update_apply_platforms(plats).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn update_apply_tags(&self, tags: Vec<RemoteTag>) -> Result<()> {
+        self.flashpoint.update_apply_tags(tags).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn update_apply_games(&self, games: RemoteGamesRes) -> Result<()> {
+        self.flashpoint.update_apply_games(&games).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn update_delete_games(&self, games: RemoteDeletedGamesRes) -> Result<()> {
+        self.flashpoint.update_delete_games(&games).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+    
+    #[napi]
     pub async fn optimize_database(&self) -> Result<()> {
         self.flashpoint.optimize_database().await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
@@ -318,4 +433,9 @@ impl FlashpointNode {
 #[napi]
 pub fn parse_user_search_input(input: String) -> GameSearch {
     flashpoint_archive::game::search::parse_user_input(&input)
+}
+
+#[napi]
+pub fn new_subfilter() -> GameFilter {
+    GameFilter::default()
 }
