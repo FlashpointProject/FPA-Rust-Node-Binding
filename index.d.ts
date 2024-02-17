@@ -6,6 +6,7 @@
 export interface GameSearch {
   filter: GameFilter
   loadRelations: GameSearchRelations
+  customIdOrder?: Array<string>
   order: GameSearchOrder
   offset?: GameSearchOffset
   limit: number
@@ -23,7 +24,17 @@ export interface GameSearchOrder {
 }
 export const enum GameSearchSortable {
   TITLE = 0,
-  RANDOM = 1
+  DEVELOPER = 1,
+  PUBLISHER = 2,
+  SERIES = 3,
+  PLATFORM = 4,
+  DATEADDED = 5,
+  DATEMODIFIED = 6,
+  RELEASEDATE = 7,
+  LASTPLAYED = 8,
+  PLAYTIME = 9,
+  RANDOM = 10,
+  CUSTOM = 11
 }
 export const enum GameSearchDirection {
   ASC = 0,
@@ -41,6 +52,9 @@ export interface GameFilter {
   blacklist: FieldFilter
   exactWhitelist: FieldFilter
   exactBlacklist: FieldFilter
+  lowerThan: SizeFilter
+  higherThan: SizeFilter
+  equalTo: SizeFilter
   matchAny: boolean
 }
 export interface FieldFilter {
@@ -59,6 +73,17 @@ export interface FieldFilter {
   source?: Array<string>
   originalDescription?: Array<string>
   language?: Array<string>
+  applicationPath?: Array<string>
+  launchCommand?: Array<string>
+}
+export interface SizeFilter {
+  tags?: number
+  platforms?: number
+  dateAdded?: string
+  dateModified?: string
+  releaseDate?: string
+  gameData?: number
+  addApps?: number
 }
 export interface PageTuple {
   id: string
