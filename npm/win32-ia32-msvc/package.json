@@ -1,15 +1,15 @@
 {
-  "name": "@fparchive/flashpoint-archive-win32-i686-msvc",
+  "name": "@fparchive/flashpoint-archive-win32-ia32-msvc",
   "version": "0.2.1",
   "os": [
     "win32"
   ],
   "cpu": [
-    "i686"
+    "ia32"
   ],
-  "main": "flashpoint-archive.win32-i686-msvc.node",
+  "main": "flashpoint-archive.win32-ia32-msvc.node",
   "files": [
-    "flashpoint-archive.win32-i686-msvc.node"
+    "flashpoint-archive.win32-ia32-msvc.node"
   ],
   "license": "MIT",
   "engines": {
