@@ -6,7 +6,8 @@
   "license": "MIT",
   "devDependencies": {
     "@napi-rs/cli": "^2.0.0",
-    "ava": "^6.0.1"
+    "ava": "^6.0.1",
+    "yargs": "^17.7.2"
   },
   "napi": {
     "name": "flashpoint-archive",
@@ -24,8 +25,8 @@
   },
   "scripts": {
     "artifacts": "napi artifacts",
-    "build": "napi build --release --platform --dts index.d.ts --js index.js && node build.mjs",
-    "build:debug": "napi build --platform --dts index.d.ts --js index.js && node build.mjs",
+    "build": "node build.mjs --release",
+    "build:debug": "node build.mjs",
     "prepublishOnly": "napi prepublish -t npm",
     "test": "ava",
     "universal": "napi universal",

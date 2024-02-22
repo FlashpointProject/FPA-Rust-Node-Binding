@@ -37,6 +37,7 @@ jobs:
           - host: windows-latest
             build: yarn build
             target: i686-pc-windows-msvc
+            build: yarn build --target i686-pc-windows-msvc
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
@@ -122,6 +123,8 @@ jobs:
             target: x86_64-pc-windows-msvc
           - host: windows-latest
             target: i686-pc-windows-msvc
+          - host: macos-latest
+            target: aarch64-apple-darwin
         node:
           - '18'
           - '20'
