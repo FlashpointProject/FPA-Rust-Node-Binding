@@ -322,6 +322,16 @@ export interface RemotePlatform {
   aliases: Array<string>
   deleted: boolean
 }
+export interface ContentTreeNode {
+  name: string
+  expanded: boolean
+  size: number
+  nodeType: string
+  children: Array<ContentTreeNode>
+  count: number
+}
+export function genContentTree(root: string): Promise<ContentTreeNode>
+export function copyFolder(src: string, dest: string): Promise<number>
 export function parseUserSearchInput(input: string): GameSearch
 export function newSubfilter(): GameFilter
 export type FlashpointNode = FlashpointArchive

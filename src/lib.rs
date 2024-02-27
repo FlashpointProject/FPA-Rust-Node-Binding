@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use napi::{Result, Error, Status};
 use napi_derive::napi;
-use flashpoint_archive::{game::{search::{GameFilter, GameSearch, PageTuple}, AdditionalApp, Game, PartialGame}, game_data::{GameData, PartialGameData}, platform::PlatformAppPath, tag::{PartialTag, Tag, TagSuggestion}, tag_category::{PartialTagCategory, TagCategory}, update::{RemoteCategory, RemoteDeletedGamesRes, RemoteGamesRes, RemotePlatform, RemoteTag}, FlashpointArchive};
+use flashpoint_archive::{game::{search::{GameFilter, GameSearch, PageTuple}, AdditionalApp, Game, PartialGame}, game_data::{GameData, PartialGameData}, platform::PlatformAppPath, tag::{PartialTag, Tag, TagSuggestion}, tag_category::{PartialTagCategory, TagCategory}, update::{RemoteCategory, RemoteDeletedGamesRes, RemoteGamesRes, RemotePlatform, RemoteTag}, util::ContentTreeNode, FlashpointArchive};
 
 #[napi(js_name = "FlashpointArchive")]
 pub struct FlashpointNode {
@@ -428,6 +428,24 @@ impl FlashpointNode {
             Error::new(Status::GenericFailure, e)
         })
     }
+}
+
+#[napi]
+pub async fn gen_content_tree(root: String) -> Result<ContentTreeNode> {
+    flashpoint_archive::generate_content_tree(&root).map_err(|e| {
+        Error::new(Status::GenericFailure, e)
+    })
+}
+
+#[napi]
+pub async fn copy_folder(src: String, dest: String) -> Result<i64> {
+    flashpoint_archive::copy_folder(&src, &dest)
+    .map(|v| {
+        v as i64
+    })
+    .map_err(|e| {
+        Error::new(Status::GenericFailure, e)
+    })
 }
 
 #[napi]
