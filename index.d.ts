@@ -171,6 +171,10 @@ export interface PartialGame {
   archiveState?: number
   addApps?: Array<AdditionalApp>
 }
+export interface GameRedirect {
+  sourceId: string
+  destId: string
+}
 export interface GameData {
   id: number
   gameId: string
@@ -334,6 +338,9 @@ export function genContentTree(root: string): Promise<ContentTreeNode>
 export function copyFolder(src: string, dest: string): Promise<number>
 export function parseUserSearchInput(input: string): GameSearch
 export function newSubfilter(): GameFilter
+export function enableDebug(): void
+export function disableDebug(): void
+export function debugEnabled(): boolean
 export type FlashpointNode = FlashpointArchive
 export class FlashpointArchive {
   constructor()
@@ -389,11 +396,14 @@ export class FlashpointArchive {
   findAllGameApplicationPaths(): Promise<Array<string>>
   findPlatformAppPaths(): Promise<Record<string, Array<PlatformAppPath>>>
   forceGamesActiveDataMostRecent(): Promise<void>
+  createGameRedirect(srcId: string, destId: string): Promise<void>
+  deleteGameRedirect(srcId: string, destId: string): Promise<void>
   updateApplyCategories(cats: Array<RemoteCategory>): Promise<void>
   updateApplyPlatforms(plats: Array<RemotePlatform>): Promise<void>
   updateApplyTags(tags: Array<RemoteTag>): Promise<void>
   updateApplyGames(games: RemoteGamesRes): Promise<void>
   updateDeleteGames(games: RemoteDeletedGamesRes): Promise<void>
+  updateApplyRedirects(redirects: Array<GameRedirect>): Promise<void>
   optimizeDatabase(): Promise<void>
 }
 

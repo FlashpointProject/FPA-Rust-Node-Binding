@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use napi::{Result, Error, Status};
 use napi_derive::napi;
-use flashpoint_archive::{game::{search::{GameFilter, GameSearch, PageTuple}, AdditionalApp, Game, PartialGame}, game_data::{GameData, PartialGameData}, platform::PlatformAppPath, tag::{PartialTag, Tag, TagSuggestion}, tag_category::{PartialTagCategory, TagCategory}, update::{RemoteCategory, RemoteDeletedGamesRes, RemoteGamesRes, RemotePlatform, RemoteTag}, util::ContentTreeNode, FlashpointArchive};
+use flashpoint_archive::{game::{search::{GameFilter, GameSearch, PageTuple}, GameRedirect, AdditionalApp, Game, PartialGame}, game_data::{GameData, PartialGameData}, platform::PlatformAppPath, tag::{PartialTag, Tag, TagSuggestion}, tag_category::{PartialTagCategory, TagCategory}, update::{RemoteCategory, RemoteDeletedGamesRes, RemoteGamesRes, RemotePlatform, RemoteTag}, util::ContentTreeNode, FlashpointArchive};
 
 #[napi(js_name = "FlashpointArchive")]
 pub struct FlashpointNode {
@@ -388,6 +388,20 @@ impl FlashpointNode {
     }
 
     #[napi]
+    pub async fn create_game_redirect(&self, src_id: String, dest_id: String) -> Result<()> {
+        self.flashpoint.create_game_redirect(&src_id, &dest_id).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn delete_game_redirect(&self, src_id: String, dest_id: String) -> Result<()> {
+        self.flashpoint.delete_game_redirect(&src_id, &dest_id).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
     pub async fn update_apply_categories(&self, cats: Vec<RemoteCategory>) -> Result<()> {
         self.flashpoint.update_apply_categories(cats).await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
@@ -418,6 +432,13 @@ impl FlashpointNode {
     #[napi]
     pub async fn update_delete_games(&self, games: RemoteDeletedGamesRes) -> Result<()> {
         self.flashpoint.update_delete_games(&games).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn update_apply_redirects(&self, redirects: Vec<GameRedirect>) -> Result<()> {
+        self.flashpoint.update_apply_redirects(redirects).await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
         })
     }
@@ -456,4 +477,19 @@ pub fn parse_user_search_input(input: String) -> GameSearch {
 #[napi]
 pub fn new_subfilter() -> GameFilter {
     GameFilter::default()
+}
+
+#[napi]
+pub fn enable_debug() {
+    flashpoint_archive::enable_debug();
+}
+
+#[napi]
+pub fn disable_debug() {
+    flashpoint_archive::disable_debug();
+}
+
+#[napi]
+pub fn debug_enabled() -> bool {
+    flashpoint_archive::debug_enabled()
 }
