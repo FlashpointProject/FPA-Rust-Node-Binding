@@ -341,6 +341,7 @@ export function newSubfilter(): GameFilter
 export function enableDebug(): void
 export function disableDebug(): void
 export function debugEnabled(): boolean
+export function loggerSusbcribe(callback: (...args: any[]) => any): void
 export type FlashpointNode = FlashpointArchive
 export class FlashpointArchive {
   constructor()

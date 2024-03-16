@@ -295,7 +295,7 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { GameSearchSortable, GameSearchDirection, FlashpointArchive, genContentTree, copyFolder, parseUserSearchInput, newSubfilter, enableDebug, disableDebug, debugEnabled } = nativeBinding
+const { GameSearchSortable, GameSearchDirection, FlashpointArchive, genContentTree, copyFolder, parseUserSearchInput, newSubfilter, enableDebug, disableDebug, debugEnabled, loggerSusbcribe } = nativeBinding
 
 module.exports.GameSearchSortable = GameSearchSortable
 module.exports.GameSearchDirection = GameSearchDirection
@@ -307,3 +307,4 @@ module.exports.newSubfilter = newSubfilter
 module.exports.enableDebug = enableDebug
 module.exports.disableDebug = disableDebug
 module.exports.debugEnabled = debugEnabled
+module.exports.loggerSusbcribe = loggerSusbcribe

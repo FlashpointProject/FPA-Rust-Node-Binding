@@ -1,6 +1,6 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, thread};
 
-use napi::{Result, Error, Status};
+use napi::{threadsafe_function::{ErrorStrategy::CalleeHandled, ThreadSafeCallContext, ThreadsafeFunction}, Error, JsFunction, Result, Status};
 use napi_derive::napi;
 use flashpoint_archive::{game::{search::{GameFilter, GameSearch, PageTuple}, GameRedirect, AdditionalApp, Game, PartialGame}, game_data::{GameData, PartialGameData}, platform::PlatformAppPath, tag::{PartialTag, Tag, TagSuggestion}, tag_category::{PartialTagCategory, TagCategory}, update::{RemoteCategory, RemoteDeletedGamesRes, RemoteGamesRes, RemotePlatform, RemoteTag}, util::ContentTreeNode, FlashpointArchive};
 
@@ -492,4 +492,29 @@ pub fn disable_debug() {
 #[napi]
 pub fn debug_enabled() -> bool {
     flashpoint_archive::debug_enabled()
+}
+
+#[napi]
+pub fn logger_susbcribe(callback: JsFunction) -> Result<()> {
+    // Convert the JsFunction to a ThreadsafeFunction for calling from any thread
+    let tsfn: ThreadsafeFunction<String, CalleeHandled> = callback.create_threadsafe_function(0, |ctx: ThreadSafeCallContext<String>| {
+        ctx.env.create_string(&ctx.value).map(|v| vec![v])
+    })?;
+
+    // Assuming `rx` is your mpsc receiver for log messages
+    let (_, rx) = flashpoint_archive::logger_subscribe();
+
+    // Spawn a new thread or task to listen for messages and call the callback
+    thread::spawn(move || {
+        loop {
+            match rx.recv() {
+                Ok(message) => {
+                    let _ = tsfn.call(Ok(message), napi::threadsafe_function::ThreadsafeFunctionCallMode::Blocking);
+                },
+                _ => ()
+            }
+        }
+    });
+
+    Ok(())
 }
