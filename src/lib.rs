@@ -33,8 +33,8 @@ impl FlashpointNode {
     }
 
     #[napi]
-    pub async fn search_games_index(&self, mut search: GameSearch) -> Result<Vec<PageTuple>> {
-        self.flashpoint.search_games_index(&mut search).await.map_err(|e| {
+    pub async fn search_games_index(&self, mut search: GameSearch, limit: Option<i64>) -> Result<Vec<PageTuple>> {
+        self.flashpoint.search_games_index(&mut search, limit).await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
         })
     }
@@ -446,6 +446,13 @@ impl FlashpointNode {
     #[napi]
     pub async fn optimize_database(&self) -> Result<()> {
         self.flashpoint.optimize_database().await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
+    pub async fn new_custom_id_order(&self, custom_id_order: Vec<String>) -> Result<()> {
+        self.flashpoint.new_custom_id_order(custom_id_order).await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
         })
     }

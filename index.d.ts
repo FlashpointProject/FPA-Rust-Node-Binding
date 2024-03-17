@@ -347,7 +347,7 @@ export class FlashpointArchive {
   constructor()
   loadDatabase(source: string): void
   searchGames(search: GameSearch): Promise<Array<Game>>
-  searchGamesIndex(search: GameSearch): Promise<Array<PageTuple>>
+  searchGamesIndex(search: GameSearch, limit?: number | undefined | null): Promise<Array<PageTuple>>
   searchGamesTotal(search: GameSearch): Promise<number>
   searchGamesWithTag(tag: string): Promise<Array<Game>>
   searchGamesRandom(search: GameSearch, count: number): Promise<Array<Game>>
@@ -406,6 +406,7 @@ export class FlashpointArchive {
   updateDeleteGames(games: RemoteDeletedGamesRes): Promise<void>
   updateApplyRedirects(redirects: Array<GameRedirect>): Promise<void>
   optimizeDatabase(): Promise<void>
+  newCustomIdOrder(customIdOrder: Array<string>): Promise<void>
 }
 
 export type TagVec = string[];
