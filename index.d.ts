@@ -84,6 +84,9 @@ export interface SizeFilter {
   releaseDate?: string
   gameData?: number
   addApps?: number
+  playtime?: number
+  playcount?: number
+  lastPlayed?: string
 }
 export interface PageTuple {
   id: string
