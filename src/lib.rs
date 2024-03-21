@@ -346,6 +346,13 @@ impl FlashpointNode {
     }
 
     #[napi]
+    pub async fn clear_playtime_tracking_by_id(&self, game_id: String) -> Result<()> {
+        self.flashpoint.clear_playtime_tracking_by_id(&game_id).await.map_err(|e| {
+            Error::new(Status::GenericFailure, e)
+        })
+    }
+
+    #[napi]
     pub async fn clear_playtime_tracking(&self) -> Result<()> {
         self.flashpoint.clear_playtime_tracking().await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
