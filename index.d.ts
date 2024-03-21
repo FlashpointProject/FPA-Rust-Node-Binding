@@ -394,6 +394,7 @@ export class FlashpointArchive {
   newTagFilterIndex(search: GameSearch): Promise<void>
   findAllGameLibraries(): Promise<Array<string>>
   addGamePlaytime(id: string, seconds: number): Promise<void>
+  clearPlaytimeTrackingById(gameId: string): Promise<void>
   clearPlaytimeTracking(): Promise<void>
   findAllGameStatuses(): Promise<Array<string>>
   findAllGamePlayModes(): Promise<Array<string>>
