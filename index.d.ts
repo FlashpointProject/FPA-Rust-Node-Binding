@@ -169,6 +169,7 @@ export interface PartialGame {
   activeDataOnDisk?: boolean
   lastPlayed?: string
   playtime?: number
+  playCounter?: number
   activeGameConfigId?: number
   activeGameConfigOwner?: string
   archiveState?: number
