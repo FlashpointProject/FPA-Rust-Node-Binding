@@ -55,6 +55,7 @@ export interface GameFilter {
   lowerThan: SizeFilter
   higherThan: SizeFilter
   equalTo: SizeFilter
+  boolComp: BoolFilter
   matchAny: boolean
 }
 export interface FieldFilter {
@@ -76,6 +77,9 @@ export interface FieldFilter {
   applicationPath?: Array<string>
   launchCommand?: Array<string>
 }
+export interface BoolFilter {
+  installed?: boolean
+}
 export interface SizeFilter {
   tags?: number
   platforms?: number
@@ -92,6 +96,22 @@ export interface PageTuple {
   id: string
   orderVal: string
   title: string
+}
+export const enum ElementType {
+  MODIFIER = 0,
+  KEY = 1,
+  KEYCHAR = 2,
+  VALUE = 3
+}
+export interface ElementPosition {
+  element: ElementType
+  value: string
+  start: number
+  end: number
+}
+export interface ParsedInput {
+  search: GameSearch
+  positions: Array<ElementPosition>
 }
 export interface AdditionalApp {
   id: string
@@ -340,7 +360,8 @@ export interface ContentTreeNode {
 }
 export function genContentTree(root: string): Promise<ContentTreeNode>
 export function copyFolder(src: string, dest: string): Promise<number>
-export function parseUserSearchInput(input: string): GameSearch
+export function mergeGameFilters(a: GameFilter, b: GameFilter): GameFilter
+export function parseUserSearchInput(input: string): ParsedInput
 export function newSubfilter(): GameFilter
 export function enableDebug(): void
 export function disableDebug(): void

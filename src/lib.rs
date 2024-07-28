@@ -2,7 +2,7 @@ use std::{collections::HashMap, thread};
 
 use napi::{threadsafe_function::{ErrorStrategy::CalleeHandled, ThreadSafeCallContext, ThreadsafeFunction}, Error, JsFunction, Result, Status};
 use napi_derive::napi;
-use flashpoint_archive::{game::{search::{GameFilter, GameSearch, PageTuple}, GameRedirect, AdditionalApp, Game, PartialGame}, game_data::{GameData, PartialGameData}, platform::PlatformAppPath, tag::{PartialTag, Tag, TagSuggestion}, tag_category::{PartialTagCategory, TagCategory}, update::{RemoteCategory, RemoteDeletedGamesRes, RemoteGamesRes, RemotePlatform, RemoteTag}, util::ContentTreeNode, FlashpointArchive};
+use flashpoint_archive::{game::{search::{GameFilter, GameSearch, ParsedInput, PageTuple}, GameRedirect, AdditionalApp, Game, PartialGame}, game_data::{GameData, PartialGameData}, platform::PlatformAppPath, tag::{PartialTag, Tag, TagSuggestion}, tag_category::{PartialTagCategory, TagCategory}, update::{RemoteCategory, RemoteDeletedGamesRes, RemoteGamesRes, RemotePlatform, RemoteTag}, util::ContentTreeNode, FlashpointArchive};
 
 #[napi(js_name = "FlashpointArchive")]
 pub struct FlashpointNode {
@@ -484,7 +484,12 @@ pub async fn copy_folder(src: String, dest: String) -> Result<i64> {
 }
 
 #[napi]
-pub fn parse_user_search_input(input: String) -> GameSearch {
+pub fn merge_game_filters(a: GameFilter, b: GameFilter) -> GameFilter {
+    flashpoint_archive::merge_game_filters(&a, &b)
+}
+
+#[napi]
+pub fn parse_user_search_input(input: String) -> ParsedInput {
     flashpoint_archive::game::search::parse_user_input(&input)
 }
 
