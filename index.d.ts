@@ -76,6 +76,7 @@ export interface FieldFilter {
   language?: Array<string>
   applicationPath?: Array<string>
   launchCommand?: Array<string>
+  ruffleSupport?: Array<string>
 }
 export interface BoolFilter {
   installed?: boolean
@@ -159,6 +160,7 @@ export interface Game {
   archiveState: number
   gameData?: Array<GameData>
   addApps?: Array<AdditionalApp>
+  ruffleSupport: RuffleSupport
 }
 export interface PartialGame {
   id: string
@@ -194,6 +196,12 @@ export interface PartialGame {
   activeGameConfigOwner?: string
   archiveState?: number
   addApps?: Array<AdditionalApp>
+  ruffleSupport?: RuffleSupport
+}
+export const enum RuffleSupport {
+  None = 'None',
+  Standalone = 'Standalone',
+  Webhosted = 'Webhosted'
 }
 export interface GameRedirect {
   sourceId: string
@@ -326,6 +334,7 @@ export interface RemoteGame {
   library: string
   platformName: string
   archiveState: number
+  ruffleSupport: string
 }
 export interface RemoteCategory {
   id: number
