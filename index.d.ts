@@ -160,7 +160,7 @@ export interface Game {
   archiveState: number
   gameData?: Array<GameData>
   addApps?: Array<AdditionalApp>
-  ruffleSupport: RuffleSupport
+  ruffleSupport: string
 }
 export interface PartialGame {
   id: string
@@ -196,12 +196,7 @@ export interface PartialGame {
   activeGameConfigOwner?: string
   archiveState?: number
   addApps?: Array<AdditionalApp>
-  ruffleSupport?: RuffleSupport
-}
-export const enum RuffleSupport {
-  None = 'None',
-  Standalone = 'Standalone',
-  Webhosted = 'Webhosted'
+  ruffleSupport?: string
 }
 export interface GameRedirect {
   sourceId: string
