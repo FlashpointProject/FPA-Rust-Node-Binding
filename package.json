@@ -29,7 +29,7 @@
     "build": "node build.mjs --release",
     "build:debug": "node build.mjs",
     "prepublishOnly": "napi prepublish -t npm",
-    "test": "ava",
+    "test": "ava ",
     "universal": "napi universal",
     "version": "napi version"
   },
