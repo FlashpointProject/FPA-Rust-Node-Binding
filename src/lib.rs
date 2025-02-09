@@ -332,22 +332,22 @@ impl FlashpointNode {
     }
 
     #[napi]
-    pub async fn find_all_game_developers(&self) -> Result<Vec<String>> {
-        self.flashpoint.find_all_game_developers().await.map_err(|e| {
+    pub async fn find_all_game_developers(&self, search: Option<GameSearch>) -> Result<Vec<String>> {
+        self.flashpoint.find_all_game_developers(search).await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
         })
     }
 
     #[napi]
-    pub async fn find_all_game_publishers(&self) -> Result<Vec<String>> {
-        self.flashpoint.find_all_game_publishers().await.map_err(|e| {
+    pub async fn find_all_game_publishers(&self, search: Option<GameSearch>) -> Result<Vec<String>> {
+        self.flashpoint.find_all_game_publishers(search).await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
         })
     }
 
     #[napi]
-    pub async fn find_all_game_series(&self) -> Result<Vec<String>> {
-        self.flashpoint.find_all_game_series().await.map_err(|e| {
+    pub async fn find_all_game_series(&self, search: Option<GameSearch>) -> Result<Vec<String>> {
+        self.flashpoint.find_all_game_series(search).await.map_err(|e| {
             Error::new(Status::GenericFailure, e)
         })
     }

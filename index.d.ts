@@ -418,9 +418,9 @@ export class FlashpointArchive {
   saveGameData(gameData: PartialGameData): Promise<GameData>
   deleteGameData(id: number): Promise<void>
   newTagFilterIndex(search: GameSearch): Promise<void>
-  findAllGameDevelopers(): Promise<Array<string>>
-  findAllGamePublishers(): Promise<Array<string>>
-  findAllGameSeries(): Promise<Array<string>>
+  findAllGameDevelopers(search?: GameSearch | undefined | null): Promise<Array<string>>
+  findAllGamePublishers(search?: GameSearch | undefined | null): Promise<Array<string>>
+  findAllGameSeries(search?: GameSearch | undefined | null): Promise<Array<string>>
   findAllGameLibraries(): Promise<Array<string>>
   addGamePlaytime(id: string, seconds: number): Promise<void>
   clearPlaytimeTrackingById(gameId: string): Promise<void>
