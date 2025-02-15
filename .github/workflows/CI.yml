@@ -32,7 +32,6 @@ jobs:
             target: x86_64-apple-darwin
             build: yarn build --target x86_64-apple-darwin
           - host: windows-latest
-            build: yarn build
             target: x86_64-pc-windows-msvc
             build: yarn build --target x86_64-win7-windows-msvc
           - host: windows-latest
