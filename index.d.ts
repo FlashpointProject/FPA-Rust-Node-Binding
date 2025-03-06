@@ -180,6 +180,7 @@ export interface PartialGame {
   status?: string
   notes?: string
   tags?: TagVec
+  detailedTags?: Array<Tag>
   source?: string
   legacyApplicationPath?: string
   legacyLaunchCommand?: string
