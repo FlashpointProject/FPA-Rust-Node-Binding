@@ -45,6 +45,7 @@ export interface GameSearchRelations {
   platforms: boolean
   gameData: boolean
   addApps: boolean
+  ext: Record<string, Record<string, boolean>>
 }
 export interface GameFilter {
   subfilters: Array<GameFilter>
@@ -77,9 +78,11 @@ export interface FieldFilter {
   applicationPath?: Array<string>
   launchCommand?: Array<string>
   ruffleSupport?: Array<string>
+  ext?: Record<string, Record<string, Array<string>>>
 }
 export interface BoolFilter {
   installed?: boolean
+  ext?: Record<string, Record<string, boolean>>
 }
 export interface SizeFilter {
   tags?: number
@@ -92,6 +95,7 @@ export interface SizeFilter {
   playtime?: number
   playcount?: number
   lastPlayed?: string
+  ext?: Record<string, Record<string, number>>
 }
 export interface PageTuple {
   id: string
@@ -113,6 +117,25 @@ export interface ElementPosition {
 export interface ParsedInput {
   search: GameSearch
   positions: Array<ElementPosition>
+}
+export interface ExtensionIndex {
+  name: string
+  key: string
+}
+export const enum ExtSearchableType {
+  String = 0,
+  Boolean = 1,
+  Number = 2
+}
+export interface ExtSearchable {
+  key: string
+  valueType: ExtSearchableType
+  searchKey: string
+}
+export interface ExtensionInfo {
+  id: string
+  searchables: Array<ExtSearchable>
+  indexes: Array<ExtensionIndex>
 }
 export interface AdditionalApp {
   id: string
@@ -161,6 +184,7 @@ export interface Game {
   gameData?: Array<GameData>
   addApps?: Array<AdditionalApp>
   ruffleSupport: string
+  extData?: Record<string, any>
 }
 export interface PartialGame {
   id: string
@@ -198,6 +222,7 @@ export interface PartialGame {
   archiveState?: number
   addApps?: Array<AdditionalApp>
   ruffleSupport?: string
+  extData?: Record<string, any>
 }
 export interface GameRedirect {
   sourceId: string
@@ -366,7 +391,6 @@ export interface ContentTreeNode {
 export function genContentTree(root: string): Promise<ContentTreeNode>
 export function copyFolder(src: string, dest: string): Promise<number>
 export function mergeGameFilters(a: GameFilter, b: GameFilter): GameFilter
-export function parseUserSearchInput(input: string): ParsedInput
 export function newSubfilter(): GameFilter
 export function enableDebug(): void
 export function disableDebug(): void
@@ -441,6 +465,8 @@ export class FlashpointArchive {
   updateApplyRedirects(redirects: Array<GameRedirect>): Promise<void>
   optimizeDatabase(): Promise<void>
   newCustomIdOrder(customIdOrder: Array<string>): Promise<void>
+  registerExtension(extInfo: ExtensionInfo): void
+  parseUserSearchInput(input: string): ParsedInput
 }
 
 export type TagVec = string[];
