@@ -8,6 +8,7 @@ export interface GameSearch {
   loadRelations: GameSearchRelations
   customIdOrder?: Array<string>
   order: GameSearchOrder
+  extOrder?: GameSearchOrderExt
   offset?: GameSearchOffset
   limit: number
   slim: boolean
@@ -21,6 +22,11 @@ export interface GameSearchOffset {
 export interface GameSearchOrder {
   column: GameSearchSortable
   direction: GameSearchDirection
+}
+export interface GameSearchOrderExt {
+  extId: string
+  key: string
+  default: any
 }
 export const enum GameSearchSortable {
   TITLE = 0,
@@ -45,7 +51,7 @@ export interface GameSearchRelations {
   platforms: boolean
   gameData: boolean
   addApps: boolean
-  ext: Record<string, Record<string, boolean>>
+  extData: boolean
 }
 export interface GameFilter {
   subfilters: Array<GameFilter>
@@ -184,6 +190,8 @@ export interface Game {
   gameData?: Array<GameData>
   addApps?: Array<AdditionalApp>
   ruffleSupport: string
+  logoPath: string
+  screenshotPath: string
   extData?: Record<string, any>
 }
 export interface PartialGame {
@@ -222,6 +230,8 @@ export interface PartialGame {
   archiveState?: number
   addApps?: Array<AdditionalApp>
   ruffleSupport?: string
+  logoPath?: string
+  screenshotPath?: string
   extData?: Record<string, any>
 }
 export interface GameRedirect {
@@ -355,6 +365,8 @@ export interface RemoteGame {
   library: string
   platformName: string
   archiveState: number
+  logoPath: string
+  screenshotPath: string
   ruffleSupport: string
 }
 export interface RemoteCategory {
