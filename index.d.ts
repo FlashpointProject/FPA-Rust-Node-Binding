@@ -15,7 +15,7 @@ export interface GameSearch {
   withTagFilter?: Array<string>
 }
 export interface GameSearchOffset {
-  value: string
+  value: any
   title: string
   gameId: string
 }
@@ -105,7 +105,7 @@ export interface SizeFilter {
 }
 export interface PageTuple {
   id: string
-  orderVal: string
+  orderVal: any
   title: string
 }
 export const enum ElementType {
