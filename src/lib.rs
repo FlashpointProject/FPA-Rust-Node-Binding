@@ -549,9 +549,9 @@ impl FlashpointNode {
     }
 
     #[napi]
-    pub async fn update_apply_games(&self, games: RemoteGamesRes) -> Result<()> {
+    pub async fn update_apply_games(&self, games: RemoteGamesRes, owner: String) -> Result<()> {
         self.flashpoint
-            .update_apply_games(&games)
+            .update_apply_games(&games, &owner)
             .await
             .map_err(|e| Error::new(Status::GenericFailure, e))
     }
