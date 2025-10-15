@@ -84,6 +84,7 @@ export interface FieldFilter {
   applicationPath?: Array<string>
   launchCommand?: Array<string>
   ruffleSupport?: Array<string>
+  owner?: Array<string>
   ext?: Record<string, Record<string, Array<string>>>
 }
 export interface BoolFilter {
@@ -154,6 +155,7 @@ export interface AdditionalApp {
 }
 export interface Game {
   id: string
+  owner: string
   library: string
   title: string
   alternateTitles: string
@@ -196,6 +198,7 @@ export interface Game {
 }
 export interface PartialGame {
   id: string
+  owner?: string
   library?: string
   title?: string
   alternateTitles?: string
@@ -365,8 +368,8 @@ export interface RemoteGame {
   library: string
   platformName: string
   archiveState: number
-  logoPath: string
-  screenshotPath: string
+  logoPath?: string
+  screenshotPath?: string
   ruffleSupport: string
 }
 export interface RemoteCategory {
@@ -472,7 +475,7 @@ export class FlashpointArchive {
   updateApplyCategories(cats: Array<RemoteCategory>): Promise<void>
   updateApplyPlatforms(plats: Array<RemotePlatform>): Promise<void>
   updateApplyTags(tags: Array<RemoteTag>): Promise<void>
-  updateApplyGames(games: RemoteGamesRes): Promise<void>
+  updateApplyGames(games: RemoteGamesRes, owner: string): Promise<void>
   updateDeleteGames(games: RemoteDeletedGamesRes): Promise<void>
   updateApplyRedirects(redirects: Array<GameRedirect>): Promise<void>
   optimizeDatabase(): Promise<void>
